@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD app</title>
+    <link rel="stylesheet" href="/css/CRUD-2472019.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="input-area">
+            <form id="record" method="post">
+                <input type="text" name="product-name" id="product-name" placeholder="Nama Produk" required>
+                <input type="number" name="price" id="price" placeholder="Harga (Rp)" required>
+                <input type="number" name="stock" id="stock" placeholder="Stok" required>
+                <br>
+                <textarea name="desc" id="desc" placeholder="Deskripsi Produk"></textarea>
+                <br>
+                <div id="execute">
+                    <button>Tambah Produk</button>
+                </div>
+            </form>
+        </div>
+        <div class="database">
+            <table id="crud-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Produk</th>
+                        <th>Harga (Rp)</th>
+                        <th>Stok</th>
+                        <th>Deskripsi Produk</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data akan diisi melalui JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            //  Fungsi generateId : untuk membuat nomor ID (urut dari 1-N)
+            function generateId() {
+                const records = JSON.parse(localStorage.getItem('records')) || [];
+                if (records.length === 0) {
+                    return 1;
+                }
+                
+                let id = 1;
+                const usedIds = records.map(r => r.id).sort((a, b) => a - b);
+                for (let i = 0; i < usedIds.length; i++) {
+                    if (usedIds[i] !== i + 1) {
+                        id = i + 1;
+                        return id;
+                    }
+                }
+                return usedIds.length + 1;
+            }
+
+            // Fungsi renderTable() : merender table saat mengakses web atau saat terjadi perubahan
+            function renderTable() {
+                $('#crud-table tbody').empty();
+                let records = JSON.parse(localStorage.getItem('records')) || [];
+                
+                records = records.slice().sort((a, b) => a.id - b.id);
+
+                if (records.length === 0) {
+                    $('#crud-table tbody').append(`
+                        <tr>
+                            <td colspan="6" style="text-align:center; color: gray;">Tidak ada produk</td>
+                        </tr>
+                    `);
+                    return;
+                }
+
+                records.forEach(record => {
+                    $('#crud-table tbody').append(`
+                        <tr>
+                            <td>${record.id}</td>
+                            <td>${record.name}</td>
+                            <td>Rp ${record.price}</td>
+                            <td>${record.stock}</td>
+                            <td>${record.desc}</td>
+                            <td>
+                                <button class="edit-btn" data-id="${record.id}">Edit</button>
+                                <button class="delete-btn" data-id="${record.id}">Hapus</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                // Edit button
+                $('.edit-btn').off('click').on('click', function() {
+                    const id = parseInt($(this).data('id'));
+                    editProduct(id);
+                });
+                // Delete button
+                $('.delete-btn').off('click').on('click', function() {
+                    const id = parseInt($(this).data('id'));
+                    deleteProduct(id);
+                });
+            }
+
+            // Fungsi resetTable() : mereset form setelah melakukan addProduct
+            function resetTable() {
+                $('#product-name').val('');
+                $('#price').val('');
+                $('#stock').val('');
+                $('#desc').val('');
+            }
+
+            // Fungsi addProduct(product) : menambahkan product ke dalam table
+            function addProduct(product) {
+                let records = JSON.parse(localStorage.getItem('records')) || [];
+                // Cari ID kosong (row kosong) dan isi di sana jika ada
+                let emptyIndex = records.findIndex(r => !r || r.id === undefined || r.name === '' || r.name === undefined);
+                if (emptyIndex !== -1) {
+                    product.id = generateId();
+                    records[emptyIndex] = product;
+                } else {
+                    product.id = generateId();
+                    records.push(product);
+                }
+                localStorage.setItem('records', JSON.stringify(records));
+                renderTable();
+                resetTable();
+            }
+
+            // Fungsi updateProduct(updatedProduct) : melakukan update terhadap table product
+            function updateProduct(updatedProduct) {
+                const records = JSON.parse(localStorage.getItem('records')) || [];
+                const index = records.findIndex(record => record.id === updatedProduct.id);
+                if (index !== -1) {
+                    records[index] = updatedProduct;
+                    localStorage.setItem('records', JSON.stringify(records));
+                    renderTable();
+                }
+            }
+
+            // Fungsi deleteProduct(id) : melakukan delete product berdasarkan id
+            function deleteProduct(id) {
+                if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                    return;
+                }
+                let records = JSON.parse(localStorage.getItem('records')) || [];
+                records = records.filter(record => record.id !== id);
+                localStorage.setItem('records', JSON.stringify(records));
+                renderTable();
+                resetTable();
+                $('#execute button').text('Tambah Produk').off('click');
+            }
+
+            // Fungsi editProduct(id) : menampilkan product yang akan diedit berdasarkan id
+            function editProduct(id) {
+                const records = JSON.parse(localStorage.getItem('records')) || [];
+                const product = records.find(record => record.id === id);
+                if (product) {
+                    $('#product-name').val(product.name);
+                    $('#price').val(product.price);
+                    $('#stock').val(product.stock);
+                    $('#desc').val(product.desc);
+                    $('#execute button').text('Update Produk').off('click').on('click', function(event) {
+                        event.preventDefault();
+                        const updatedProduct = {
+                            id: product.id,
+                            name: $('#product-name').val(),
+                            price: parseFloat($('#price').val()),
+                            stock: parseInt($('#stock').val()),
+                            desc: $('#desc').val()
+                        };
+                        updateProduct(updatedProduct);
+                        $(this).text('Tambah Produk');
+                    });
+                }
+            }
+
+            // Prevent default form submission and handle add product
+            $('#record').on('submit', function(event) {
+                event.preventDefault();
+                const product = {
+                    id: generateId(),
+                    name: $('#product-name').val(),
+                    price: parseFloat($('#price').val()),
+                    stock: parseInt($('#stock').val()),
+                    desc: $('#desc').val()
+                };
+                addProduct(product);
+            });
+
+            // Fungsi saveAndRender() : melakukan save setelah create, update, dan delete
+            function saveAndRender() {
+                localStorage.setItem('records', JSON.stringify(records));
+                renderTable();
+            }
+
+            // Tampilkan table saat refresh
+            renderTable();
+        });
+    </script>
+</body>
+</html>
