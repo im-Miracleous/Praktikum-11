@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/css/Login-2472019.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="login-title">Login</h1>
+        <form id="login" method="post" autocomplete="off">
+            <div class="input-group">
+                <label for="email">Email</label><br>
+                <input type="email" id="email" name="email" required autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label><br>
+                <input type="password" id="password" name="password" required autocomplete="off">
+            </div>
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <p id="output"></p>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#login').on('submit', function(event) {
+                event.preventDefault();
+
+                // Ambil nilai email dan password dari input
+                var email = $('#email').val();
+                var password = $('#password').val();
+                
+                // Konfigurasi email dan password yang benar
+                var correctEmail = 'keajaiban@ngodingwebdas.id';
+                var correctPass = 'lopyuwebdash3000';
+
+                // Cek apakah email dan password sesuai/tidak
+                if (email === correctEmail && password === correctPass) {
+                    $('#output').text('Login berhasil! Mohon tunggu..').css({'color': 'green', 'margin-top': '10px'})
+                    setInterval(function() {
+                        localStorage.setItem('username', 'Tung Tung Tung Tung Sahur');
+                        localStorage.setItem('check', 'true');
+                        window.location.href = '/Login.success-2472019.html';
+                    }, 3000);
+                } else {
+                    $('#output').text('Email dan/atau password salah.').css({'color': 'red', 'margin-top': '10px'});
+                }
+            })
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Datang!</title>
+    <link rel="stylesheet" href="/css/Login.success-2472019.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="interface">
+        <div class="navigation-group">
+            <h1>Selamat datang, <span id="username"></span>!</h1>
+            <button id="info-penjualan" class="btn">Tampilkan Info Penjualan</button>
+            <button id="info-terlaris" class="btn">Tampilkan Produk Terlaris</button>
+        </div>
+        <div class="logout-area">
+            <button id="logout" class="btn">Logout</button>
+        </div>
+    </div>
+
+    <section class="penjualan">
+        <h2>Info Penjualan</h2>
+        <div class="sales">
+            <div class="salesBox">
+                <h4>Total Penjualan Bulanan</h4>
+                <p id="monthly-salary"></p>
+            </div>
+            <div class="salesBox">
+                <h4>Jumlah Produk Terjual</h4>
+                <p id="sold"></p>
+            </div>
+            <div class="salesBox">
+                <h4>Total Pengunjung Toko</h4>
+                <p id="visitors"></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="terlaris">
+        <h2>Produk Terlaris</h2>
+        <div class="etalase" id="product-list">
+            <!-- Products will be loaded here -->
+        </div>
+    </section>
+
+    <script>
+        if (localStorage.getItem('check') !== 'true') {
+            window.location.href = '/Login-2472019.html';
+        }
+
+        $(document).ready(function () {
+            var username = localStorage.getItem('username') || '';
+            $('#username').text(username);
+
+
+            $.getJSON('database.json', function(data) {
+                $('#monthly-salary').text(data.sales.monthly_salary);
+                $('#sold').text(data.sales.sold);
+                $('#visitors').text(data.sales.visitors);
+
+                var productsHtml = '';
+                data.products.forEach(function(product) {
+                    productsHtml += `
+                        <div class="product">
+                            <img src="${product.img}" alt="${product.alt}">
+                            <div class="desc">
+                                <h4>${product.title}</h4>
+                                <p>${product.desc}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                $('#product-list').html(productsHtml);
+            });
+
+            $('#info-penjualan').on('click', function () {
+                $('.penjualan').show();
+                $('.terlaris').hide();
+            });
+            $('#info-terlaris').on('click', function () {
+                $('.terlaris').show();
+                $('.penjualan').hide();
+            });
+            $('#logout').on('click', function () {
+                localStorage.removeItem('check');
+                localStorage.removeItem('username');
+                window.location.href = '/Login-2472019.html';
+            });
+        });
+    </script>
+</body>
+
+</html>

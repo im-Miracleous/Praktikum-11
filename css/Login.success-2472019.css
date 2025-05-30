@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    margin: 2rem;
+}
+
+h1,
+h2,
+h4 {
+    font-weight: normal;
+}
+
+section>h2 {
+    margin-bottom: 1rem;
+}
+
+.interface {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.navigation-group>h1 {
+    margin-bottom: 1rem;
+}
+
+.btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 25px;
+    transition: 0.2s;
+}
+
+#info-penjualan {
+    background-color: dodgerblue;
+}
+
+#info-terlaris {
+    background-color: grey;
+}
+
+.btn:hover {
+    filter: brightness(0.9);
+    cursor: pointer;
+}
+
+.logout-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logout-area>button {
+    width: 100px;
+    height: 40px;
+    background-color: firebrick;
+}
+
+.sales {
+    display: flex;
+    height: 10rem;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.salesBox {
+    border: 1px solid #333;
+    width: 20rem;
+    height: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.salesBox>p {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.etalase {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5rem;
+}
+
+.product {
+    width: 20rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    text-align: center;
+    border: 1px solid gray;
+}
+
+.product img {
+    height: 150px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.product p {
+    font-size: 0.75rem;
+    margin: 0.5rem 0 1rem;
+}
+
+.penjualan,
+.terlaris {
+    display: none;
+}

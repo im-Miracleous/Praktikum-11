@@ -1,0 +1,27 @@
+{
+    "sales": {
+        "monthly_salary": "Rp 10.000.000",
+        "sold": 500,
+        "visitors": "2,000"
+    },
+    "products": [
+        {
+            "img": "/img/kaos.jpeg",
+            "alt": "Kaos nyaman",
+            "title": "Kaos Nyaman",
+            "desc": "Kaos yang nyaman dipakai"
+        },
+        {
+            "img": "/img/topi.jpeg",
+            "alt": "Topi keren",
+            "title": "Topi Keren",
+            "desc": "Topi yang keren dipakai"
+        },
+        {
+            "img": "/img/sandal.webp",
+            "alt": "Sandal empuk",
+            "title": "Sandal Empuk",
+            "desc": "Sandal yang empuk dipakai"
+        }
+    ]
+}
